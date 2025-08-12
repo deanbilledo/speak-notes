@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎤 Speak Notes - Voice Recording APK
 
-## Getting Started
+A simple, standalone voice recording app that converts speech to text and saves notes offline.
 
-First, run the development server:
+## 📱 Features
 
+- **Voice Recording** - Real-time speech-to-text conversion
+- **Offline Storage** - Notes saved locally on device
+- **Dark Mode** - Toggle between light and dark themes
+- **Note Management** - Save, view, and delete notes
+- **Mobile Optimized** - Touch-friendly interface
+- **Android APK** - Ready for Android installation
+
+## 🚀 Quick Start
+
+### Generate APK
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run cap:build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Your APK will be created at: `android/app/build/outputs/apk/debug/app-debug.apk`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Alternative: Open in Android Studio
+```bash
+npm install
+npm run cap:android
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📂 Project Structure
 
-## Learn More
+```
+speak-notes/
+├── dist/                          # Web app files
+│   ├── index.html                 # Main app (standalone)
+│   ├── manifest.json              # PWA manifest
+│   └── icon.svg                   # App icon
+├── android/                       # Android project
+│   └── app/build/outputs/apk/     # Generated APK location
+├── capacitor.config.ts            # Capacitor configuration
+└── package.json                   # Dependencies and scripts
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🔧 Commands
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `npm run cap:sync` - Sync web assets to Android
+- `npm run cap:android` - Open project in Android Studio
+- `npm run cap:build` - Build APK via command line
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📋 Prerequisites
 
-## Deploy on Vercel
+- **Node.js** (for npm commands)
+- **Android Studio** (for APK building)
+- **Java JDK 8+** (for Gradle)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📲 Installation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Build the APK using commands above
+2. Copy `app-debug.apk` to your Android device
+3. Enable "Unknown Sources" in Android settings
+4. Install the APK
+5. Grant microphone permissions when prompted
+
+## ✨ App Features
+
+- **Microphone Permission** - Automatic permission requests
+- **Speech Recognition** - Works in Chrome, Edge, Safari
+- **Local Storage** - No internet required after installation
+- **Responsive Design** - Works on all screen sizes
+- **Native Feel** - Behaves like a native Android app
+
+## 🎯 Ready to Use
+
+This project is streamlined and ready for APK generation. All unnecessary files have been removed, leaving only what's needed for building and deploying your voice recording app.
+
+**Total project size:** Minimal (no heavy frameworks, just vanilla HTML/JS + Capacitor)
+
+---
+
+**Made with ❤️ for simple, effective voice note-taking**
