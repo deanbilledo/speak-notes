@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useRef } from "react";
-import { FaMicrophone, FaStop } from "react-icons/fa";
+import React, { useRef, useState } from "react";
+import { FaMicrophone, FaPause, FaStop } from "react-icons/fa";
 
 const Recorder: React.FC = () => {
   const [recording, setRecording] = useState(false);
+  const [paused, setPaused] = useState(false);
   const [transcript, setTranscript] = useState("");
   const recognitionRef = useRef<any>(null);
 
@@ -32,10 +33,12 @@ const Recorder: React.FC = () => {
     };
     recognition.onend = () => {
       setRecording(false);
+      setPaused(false);
     };
     recognitionRef.current = recognition;
     recognition.start();
     setRecording(true);
+    setPaused(false);
   };
 
   const stopRecording = () => {
@@ -44,6 +47,7 @@ const Recorder: React.FC = () => {
       recognitionRef.current = null;
     }
     setRecording(false);
+    setPaused(false);
     if (transcript.trim()) {
       const stored = localStorage.getItem("notes");
       const notes = stored ? JSON.parse(stored) : [];
@@ -59,6 +63,18 @@ const Recorder: React.FC = () => {
     }
   };
 
+  const pauseRecording = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setPaused(true);
+    }
+  };
+
+  const resumeRecording = () => {
+    if (!paused) return;
+    startRecording();
+  };
+
   return (
     <div className="recorder-root">
       <div className="recorder-controls">
@@ -71,13 +87,31 @@ const Recorder: React.FC = () => {
             <FaMicrophone />
           </button>
         )}
-        {recording && (
+        {recording && !paused && (
+          <>
+            <button
+              className="recorder-btn recorder-btn-stop"
+              onClick={stopRecording}
+              aria-label="Stop recording"
+            >
+              <FaStop />
+            </button>
+            <button
+              className="recorder-btn recorder-btn-pause"
+              onClick={pauseRecording}
+              aria-label="Pause recording"
+            >
+              <FaPause />
+            </button>
+          </>
+        )}
+        {recording && paused && (
           <button
-            className="recorder-btn recorder-btn-stop"
-            onClick={stopRecording}
-            aria-label="Stop recording"
+            className="recorder-btn recorder-btn-main"
+            onClick={resumeRecording}
+            aria-label="Resume recording"
           >
-            <FaStop />
+            <FaMicrophone />
           </button>
         )}
       </div>

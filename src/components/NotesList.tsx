@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { getNotes, Note } from "@/lib/notes";
 
 interface NoteItem {
   id: string;
