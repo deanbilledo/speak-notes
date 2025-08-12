@@ -3,19 +3,25 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 
+interface Note {
+  id: string;
+  content: string;
+  created: number;
+}
+
 export default function NoteEditPage() {
   const router = useRouter();
   const params = useParams();
   const noteId = params?.id as string;
-  const [note, setNote] = useState<any>(null);
+  const [note, setNote] = useState<Note | null>(null);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const stored = localStorage.getItem("notes");
     if (stored) {
-      const notes = JSON.parse(stored);
-      const found = notes.find((n: any) => n.id === noteId);
+      const notes: Note[] = JSON.parse(stored);
+      const found = notes.find((n: Note) => n.id === noteId);
       if (found) {
         setNote(found);
         setText(found.content);
@@ -28,8 +34,8 @@ export default function NoteEditPage() {
     if (!note) return;
     const stored = localStorage.getItem("notes");
     if (stored) {
-      const notes = JSON.parse(stored);
-      const updated = notes.map((n: any) => 
+      const notes: Note[] = JSON.parse(stored);
+      const updated = notes.map((n: Note) => 
         n.id === noteId ? { ...n, content: text } : n
       );
       localStorage.setItem("notes", JSON.stringify(updated));
@@ -56,7 +62,7 @@ export default function NoteEditPage() {
           contentEditable
           suppressContentEditableWarning
           spellCheck={true}
-          onInput={e => setText((e.target as HTMLDivElement).innerText)}
+          onInput={(e) => setText((e.target as HTMLDivElement).innerText)}
           data-placeholder="Write your note here..."
         >
           {text}
