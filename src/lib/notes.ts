@@ -1,17 +1,21 @@
 export type Note = {
   id: string;
+  title?: string;
   text: string;
   createdAt: Date;
   noteType: "voice" | "text";
 };
 
+
 const NOTES_KEY = "speak_notes";
 
 
-export async function saveNote(text: string) {
+export async function saveNote(text: string, title?: string) {
   const notes = await getNotes();
+  const defaultTitle = title || text.split(" ").slice(0, 5).join(" ");
   const note: Note = {
     id: Date.now().toString(),
+    title: defaultTitle,
     text,
     createdAt: new Date(),
     noteType: "voice",
@@ -20,10 +24,12 @@ export async function saveNote(text: string) {
   localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
 }
 
-export async function saveTypedNote(text: string) {
+export async function saveTypedNote(text: string, title?: string) {
   const notes = await getNotes();
+  const defaultTitle = title || text.split(" ").slice(0, 5).join(" ");
   const note: Note = {
     id: Date.now().toString(),
+    title: defaultTitle,
     text,
     createdAt: new Date(),
     noteType: "text",
@@ -32,10 +38,11 @@ export async function saveTypedNote(text: string) {
   localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
 }
 
-export async function updateNote(id: string, newText: string) {
+export async function updateNote(id: string, newTitle: string, newText: string) {
   const notes = await getNotes();
   const idx = notes.findIndex((n) => n.id === id);
   if (idx !== -1) {
+    notes[idx].title = newTitle;
     notes[idx].text = newText;
     localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
   }
