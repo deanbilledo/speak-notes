@@ -1,42 +1,66 @@
 "use client";
-import React, { useState, useRef } from "react";
 
+import React, { useState, useRef } from "react";
 import { saveNote } from "@/lib/notes";
-// import { transcribeStream } from "@/lib/deepgram";
 
 export default function Recorder() {
   const [recording, setRecording] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [saving, setSaving] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunks = useRef<Blob[]>([]);
+  const recognitionRef = useRef<any>(null);
 
   const handleStart = async () => {
-    setTranscript("");
-    setRecording(true);
-    audioChunks.current = [];
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new window.MediaRecorder(stream);
-    mediaRecorderRef.current = mediaRecorder;
-    mediaRecorder.ondataavailable = (e) => {
-      audioChunks.current.push(e.data);
+    if (typeof window === "undefined") return;
+    // On mobile, request mic permission explicitly
+    if (window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
+      try {
+        await window.navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (err) {
+        setTranscript("Microphone permission denied.");
+        return;
+      }
+    }
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      setTranscript("Speech recognition not supported in this browser.");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = "en-US";
+    let finalTranscript = "";
+    recognition.onresult = (event: any) => {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        } else {
+          interim += event.results[i][0].transcript;
+        }
+      }
+      setTranscript(finalTranscript + interim);
     };
-    mediaRecorder.onstop = async () => {
+    recognition.onerror = (event: any) => {
+      setTranscript("Microphone access denied or error: " + event.error);
+      setRecording(false);
+    };
+    recognition.onend = async () => {
       setSaving(true);
-      const audioBlob = new Blob(audioChunks.current, { type: "audio/webm" });
-      // TODO: Send audioBlob to Deepgram for transcription
-      // For now, just fake transcript
-      const fakeTranscript = "[Transcription would appear here]";
-      setTranscript(fakeTranscript);
-      await saveNote(fakeTranscript);
+      if (finalTranscript.trim()) {
+        await saveNote(finalTranscript.trim());
+      }
       setSaving(false);
       setRecording(false);
     };
-    mediaRecorder.start();
+    setTranscript("");
+    setRecording(true);
+    recognition.start();
   };
 
   const handleStop = () => {
-    mediaRecorderRef.current?.stop();
+    recognitionRef.current?.stop();
   };
 
   return (
