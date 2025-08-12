@@ -1,11 +1,18 @@
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp, query, orderBy, getDocs } from "firebase/firestore";
+
 export type Note = {
+<<<<<<< HEAD
   id: string;
   title?: string;
+=======
+  id?: string;
+>>>>>>> parent of d333f49 (Add typed notes, swipe-to-delete, and local storage support)
   text: string;
   createdAt: Date;
-  noteType: "voice" | "text";
 };
 
+<<<<<<< HEAD
 
 const NOTES_KEY = "speak_notes";
 
@@ -46,16 +53,21 @@ export async function updateNote(id: string, newTitle: string, newText: string) 
     notes[idx].text = newText;
     localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
   }
+=======
+export async function saveNote(text: string) {
+  await addDoc(collection(db, "notes"), {
+    text,
+    createdAt: serverTimestamp(),
+  });
+>>>>>>> parent of d333f49 (Add typed notes, swipe-to-delete, and local storage support)
 }
 
 export async function getNotes(): Promise<Note[]> {
-  if (typeof window === "undefined") return [];
-  const raw = localStorage.getItem(NOTES_KEY);
-  if (!raw) return [];
-  try {
-    const notes = JSON.parse(raw) as Note[];
-    return notes.map((n) => ({ ...n, createdAt: new Date(n.createdAt) }));
-  } catch {
-    return [];
-  }
+  const q = query(collection(db, "notes"), orderBy("createdAt", "desc"));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    text: doc.data().text,
+    createdAt: doc.data().createdAt?.toDate?.() || new Date(),
+  }));
 }
