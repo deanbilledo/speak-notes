@@ -113,6 +113,85 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
+
+/* Note Voice Recorder Controls */
+.note-recorder-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.note-recorder-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border: none;
+  outline: none;
+  border-radius: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  min-width: 80px;
+  min-height: 60px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.note-recorder-btn:active {
+  transform: scale(0.95);
+}
+
+.note-recorder-btn-main {
+  background: #2563eb;
+  color: #fff;
+}
+
+.note-recorder-btn-main:hover, .note-recorder-btn-main:focus {
+  background: #1d4ed8;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.2);
+}
+
+.note-recorder-btn-stop {
+  background: #dc2626;
+  color: #fff;
+}
+
+.note-recorder-btn-stop:hover, .note-recorder-btn-stop:focus {
+  background: #991b1b;
+  box-shadow: 0 4px 12px rgba(220,38,38,0.2);
+}
+
+.note-recorder-btn-pause {
+  background: #fbbf24;
+  color: #fff;
+}
+
+.note-recorder-btn-pause:hover, .note-recorder-btn-pause:focus {
+  background: #f59e0b;
+  box-shadow: 0 4px 12px rgba(251,191,36,0.2);
+}
+
+.main-root.dark .note-recorder-btn-main {
+  background: #1e293b;
+  color: #93c5fd;
+}
+
+.main-root.dark .note-recorder-btn-stop {
+  background: #7f1d1d;
+  color: #fecaca;
+}
+
+.main-root.dark .note-recorder-btn-pause {
+  background: #78350f;
+  color: #fde68a;
+}
 .note-save-btn:hover, .note-save-btn:focus {
   background: #1d4ed8;
   box-shadow: 0 6px 16px rgba(37,99,235,0.3);
@@ -228,6 +307,18 @@
     width: 100%;
     padding: 0.875rem;
   }
+  
+  .note-recorder-controls {
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+  }
+  
+  .note-recorder-btn {
+    padding: 0.75rem 1rem;
+    min-width: 70px;
+    min-height: 55px;
+    font-size: 0.8rem;
+  }
 }
 
 /* Extra small screens */
@@ -258,6 +349,13 @@
   .note-date {
     font-size: 0.75rem;
     line-height: 1.1;
+  }
+  
+  .note-recorder-btn {
+    padding: 0.625rem 0.875rem;
+    min-width: 65px;
+    min-height: 50px;
+    font-size: 0.75rem;
   }
 }
 
