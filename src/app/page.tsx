@@ -39,8 +39,6 @@ export default function Home() {
         {dark ? "☀️" : "🌙"}
       </button>
       <h1 className="main-title">Speak Notes</h1>
-      <Recorder />
-      <NotesList />
-    </main>
+>
   );
 }

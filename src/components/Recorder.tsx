@@ -2,52 +2,24 @@
 import React, { useRef, useState } from "react";
 import { FaMicrophone, FaPause, FaStop } from "react-icons/fa";
 
-interface SpeechRecognitionEvent {
-  results: {
-    [key: number]: {
-      [key: number]: {
-        transcript: string;
-      };
-      isFinal: boolean;
-    };
-    length: number;
-  };
-}
-
-interface SpeechRecognition extends EventTarget {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  start(): void;
-  stop(): void;
-  onresult: (event: SpeechRecognitionEvent) => void;
-  onend: () => void;
-}
-
-declare global {
-  interface Window {
-    SpeechRecognition: new () => SpeechRecognition;
-    webkitSpeechRecognition: new () => SpeechRecognition;
-  }
-}
-
 const Recorder: React.FC = () => {
   const [recording, setRecording] = useState(false);
   const [paused, setPaused] = useState(false);
   const [transcript, setTranscript] = useState("");
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any>(null);
 
   const startRecording = () => {
     if (!("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
       alert("Speech recognition not supported in this browser.");
       return;
     }
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = "en-US";
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
+    recognition.onresult = (event: any) => {
       let interim = "";
       let final = "";
       for (let i = 0; i < event.results.length; ++i) {
@@ -110,7 +82,6 @@ const Recorder: React.FC = () => {
           <button
             className="recorder-btn recorder-btn-main"
             onClick={startRecording}
-            onTouchStart={(e) => e.preventDefault()}
             aria-label="Start recording"
           >
             <FaMicrophone />
@@ -121,7 +92,6 @@ const Recorder: React.FC = () => {
             <button
               className="recorder-btn recorder-btn-stop"
               onClick={stopRecording}
-              onTouchStart={(e) => e.preventDefault()}
               aria-label="Stop recording"
             >
               <FaStop />
@@ -129,7 +99,6 @@ const Recorder: React.FC = () => {
             <button
               className="recorder-btn recorder-btn-pause"
               onClick={pauseRecording}
-              onTouchStart={(e) => e.preventDefault()}
               aria-label="Pause recording"
             >
               <FaPause />
@@ -140,7 +109,6 @@ const Recorder: React.FC = () => {
           <button
             className="recorder-btn recorder-btn-main"
             onClick={resumeRecording}
-            onTouchStart={(e) => e.preventDefault()}
             aria-label="Resume recording"
           >
             <FaMicrophone />
